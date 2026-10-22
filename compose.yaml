@@ -1,0 +1,125 @@
+services:
+  postgres:
+    image: postgres:18.6-trixie
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-database}
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4.4.0-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    ports:
+      - "127.0.0.1:${RABBITMQ_PORT:-5672}:5672"
+      - "127.0.0.1:${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      target: app
+    command: [ "php", "bin/migrate.php" ]
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB:-database}
+      DB_USER: ${POSTGRES_USER:-user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      target: app
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:8080"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB:-database}
+      DB_USER: ${POSTGRES_USER:-user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - php
+        - -r
+        - "$$response = @file_get_contents('http://127.0.0.1:8080'); exit($$response === false ? 1 : 0);"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      target: app
+    command: [ "php", "bin/worker.php" ]
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB:-database}
+      DB_USER: ${POSTGRES_USER:-user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      AMQP_HOST: rabbitmq
+      AMQP_USER: ${RABBITMQ_USER:-guest}
+      AMQP_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+
+  quality:
+    build:
+      context: .
+      target: quality
+    user: "${HOST_UID:-10001}:${HOST_GID:-10001}"
+    command: [ "composer", "quality:checks" ]
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB:-database}
+      DB_USER: ${POSTGRES_USER:-user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      AMQP_HOST: rabbitmq
+      AMQP_USER: ${RABBITMQ_USER:-guest}
+      AMQP_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+    profiles: [ "tools" ]
+    volumes:
+      - .:/app
+      - quality-vendor:/app/vendor
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  quality-vendor:

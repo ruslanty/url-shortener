@@ -1,0 +1,73 @@
+{
+    "name": "ruslanty/url-shortener",
+    "description": "Small PHP backend that creates short links, redirects visitors, and counts clicks in the background",
+    "type": "project",
+    "require": {
+        "php": "^8.5",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "cycle/database": "^2.23.3",
+        "cycle/orm": "^2.18.1",
+        "laminas/laminas-config-aggregator": "^1.20.0",
+        "laminas/laminas-diactoros": "^3.9.0",
+        "laminas/laminas-servicemanager": "^4.5.1",
+        "mezzio/mezzio": "^3.28.1",
+        "mezzio/mezzio-fastroute": "^3.14.0",
+        "php-amqplib/php-amqplib": "^3.7.5",
+        "ramsey/uuid": "^4.9.4"
+    },
+    "require-dev": {
+        "deptrac/deptrac": "^4.7.2",
+        "friendsofphp/php-cs-fixer": "^3.95.27",
+        "php-parallel-lint/php-parallel-lint": "^1.4.0",
+        "phpstan/phpstan": "^2.3.1",
+        "phpstan/phpstan-deprecation-rules": "^2.0.5",
+        "phpstan/phpstan-strict-rules": "^2.1.0",
+        "phpunit/phpunit": "^13.4.3",
+        "rector/rector": "^2.7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ShortURL\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ShortURL\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "lint": "parallel-lint --exclude vendor .",
+        "test": "phpunit --configuration phpunit.xml --testsuite=unit",
+        "test:integration": "phpunit --configuration phpunit.xml --testsuite=integration",
+        "analyse": "phpstan analyse --configuration=phpstan.neon --no-progress",
+        "architecture": "deptrac analyse --config-file=deptrac.yaml --no-cache --fail-on-uncovered",
+        "format:check": "php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php",
+        "rector:check": "rector process --dry-run",
+        "security:audit": "composer audit --locked",
+        "quality": "docker compose run --build --rm quality",
+        "quality:checks": [
+            "@lint",
+            "@test",
+            "@test:integration",
+            "@analyse",
+            "@architecture",
+            "@format:check",
+            "@rector:check",
+            "@security:audit"
+        ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.5.0",
+            "ext-pdo": "8.5.0",
+            "ext-pdo_pgsql": "8.5.0",
+            "ext-sockets": "8.5.0"
+        },
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

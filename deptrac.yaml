@@ -1,0 +1,50 @@
+deptrac:
+  paths:
+    - ./src
+  layers:
+    - name: Domain
+      collectors:
+        - type: classNameRegex
+          value: '~^ShortURL\\Domain\\~'
+    - name: Application
+      collectors:
+        - type: classNameRegex
+          value: '~^ShortURL\\Application\\~'
+    - name: Delivery
+      collectors:
+        - type: classNameRegex
+          value: '~^ShortURL\\Delivery\\~'
+    - name: Adapter
+      collectors:
+        - type: classNameRegex
+          value: '~^ShortURL\\Adapter\\~'
+    - name: Composition
+      collectors:
+        - type: classNameRegex
+          value: '~^ShortURL\\ConfigProvider$~'
+    - name: External
+      collectors:
+        - type: classNameRegex
+          value: '~^(?!ShortURL\\).+~'
+  ruleset:
+    Domain:
+      - External
+    Application:
+      - Domain
+      - External
+    Delivery:
+      - Application
+      - Domain
+      - External
+    Adapter:
+      - Application
+      - Domain
+      - External
+    Composition:
+      - Domain
+      - Application
+      - Delivery
+      - Adapter
+      - External
+    External: [ ]
+  ignore_uncovered_internal_classes: false

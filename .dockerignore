@@ -1,0 +1,8 @@
+.git
+.env
+.phpunit.cache
+.phpunit.result.cache
+.phpstan
+.deptrac.cache
+.php-cs-fixer.cache
+vendor

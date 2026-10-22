@@ -1,0 +1,29 @@
+@baseUrl = http://127.0.0.1:8080
+@destinationUrl = https://element.id.lv
+
+### API root
+GET {{baseUrl}}/
+Accept: application/json
+
+### Create a short link; saves its code for the requests below
+POST {{baseUrl}}/api/links
+Content-Type: application/json
+
+{
+  "url": "{{destinationUrl}}"
+}
+> {%
+  client.global.set('code', response.body.code);
+%}
+
+### List links
+GET {{baseUrl}}/api/links
+Accept: application/json
+
+### Redirect; disable automatic redirect following to see the 302 response
+# @no-redirect
+GET {{baseUrl}}/{{code}}
+
+### Click statistics; wait briefly after redirect for the worker to process the event
+GET {{baseUrl}}/{{code}}/stats
+Accept: application/json
