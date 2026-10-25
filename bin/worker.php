@@ -12,8 +12,8 @@ require __DIR__ . '/../vendor/autoload.php';
 $connection = new AMQPStreamConnection(
     getenv('AMQP_HOST') ?: 'rabbitmq', // @phpstan-ignore ternary.shortNotAllowed
     5672,
-    getenv('AMQP_USER') ?: 'guest', // @phpstan-ignore ternary.shortNotAllowed
-    getenv('AMQP_PASSWORD') ?: 'guest', // @phpstan-ignore ternary.shortNotAllowed
+    getenv('AMQP_USER') ?: 'user', // @phpstan-ignore ternary.shortNotAllowed
+    getenv('AMQP_PASSWORD') ?: 'password', // @phpstan-ignore ternary.shortNotAllowed
 );
 
 $channel = $connection->channel();
