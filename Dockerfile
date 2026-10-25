@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1.13.2-php8.5-trixie AS base
+FROM dunglas/frankenphp:1.13.3-php8.5.12-trixie AS base
 
 RUN install-php-extensions pdo_pgsql sockets \
     && apt-get update \

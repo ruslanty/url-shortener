@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8338a88f4a85ef3a0cd266d23e66649",
+    "content-hash": "a84e5e9feb7bbee1daab28bb25b511ed",
     "packages": [
         {
             "name": "brick/math",
@@ -4035,11 +4035,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.3.1",
+            "version": "2.3.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6155239b488e95d26d1ebd95c6b4bb294d7f09db",
-                "reference": "6155239b488e95d26d1ebd95c6b4bb294d7f09db",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/18bc23a0682f08591529377d271b5c4dfe9ed1dd",
+                "reference": "18bc23a0682f08591529377d271b5c4dfe9ed1dd",
                 "shasum": ""
             },
             "require": {
@@ -4095,7 +4095,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-08T21:09:11+00:00"
+            "time": "2026-10-24T11:36:00+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -8399,10 +8399,10 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.5.0",
-        "ext-pdo": "8.5.0",
-        "ext-pdo_pgsql": "8.5.0",
-        "ext-sockets": "8.5.0"
+        "php": "8.5.12",
+        "ext-pdo": "8.5.12",
+        "ext-pdo_pgsql": "8.5.12",
+        "ext-sockets": "8.5.12"
     },
     "plugin-api-version": "2.9.0"
 }

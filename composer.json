@@ -21,7 +21,7 @@
         "deptrac/deptrac": "^4.7.2",
         "friendsofphp/php-cs-fixer": "^3.95.27",
         "php-parallel-lint/php-parallel-lint": "^1.4.0",
-        "phpstan/phpstan": "^2.3.1",
+        "phpstan/phpstan": "^2.3.2",
         "phpstan/phpstan-deprecation-rules": "^2.0.5",
         "phpstan/phpstan-strict-rules": "^2.1.0",
         "phpunit/phpunit": "^13.4.3",
@@ -60,10 +60,10 @@
     },
     "config": {
         "platform": {
-            "php": "8.5.0",
-            "ext-pdo": "8.5.0",
-            "ext-pdo_pgsql": "8.5.0",
-            "ext-sockets": "8.5.0"
+            "php": "8.5.12",
+            "ext-pdo": "8.5.12",
+            "ext-pdo_pgsql": "8.5.12",
+            "ext-sockets": "8.5.12"
         },
         "sort-packages": true,
         "allow-plugins": {}
